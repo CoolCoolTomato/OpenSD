@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'simpleui',
     # app
     'user',
+    'sd',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -169,3 +170,5 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'user.CustomUser'
+
+SD_API_URL = 'http://23.94.66.115:8080/'

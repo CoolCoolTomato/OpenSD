@@ -23,7 +23,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # app
     path("api/", include('user.urls')),
+    path("api/", include('sd.urls')),
     # 静态资源路由
     re_path('static/(?P<path>.*)', serve, {'document_root': settings.STATIC_ROOT}, name='static'),
-    re_path('media/(?P<path>).*', serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
+    re_path('media/(?P<path>.*)', serve, {'document_root': settings.MEDIA_ROOT}, name='media'),
 ]
