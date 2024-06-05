@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from "@/views/Login.vue";
 import Base from "@/components/Base.vue";
 import Index from "@/views/Index.vue";
+import Text2Img from "@/views/Text2Img.vue";
+import Images from "@/views/Images.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +18,16 @@ const router = createRouter({
           path: 'index',
           name: 'index',
           component: Index,
+        },
+        {
+          path: 'text2img',
+          name: 'text2img',
+          component: Text2Img,
+        },
+        {
+          path: 'images',
+          name: 'images',
+          component: Images,
         },
       ],
     },

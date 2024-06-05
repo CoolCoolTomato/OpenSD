@@ -1,9 +1,9 @@
 import axios from 'axios';
-import config from '@/config/config.js';
+import Config from '@/config/config.js';
 import { refreshAccessToken } from '@/api/user.js';
 
 export const apiClient = axios.create({
-  baseURL: config.baseURL,
+  baseURL: Config.baseURL,
   withCredentials: false,
   headers: {
     Accept: 'application/json',

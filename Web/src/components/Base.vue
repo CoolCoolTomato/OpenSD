@@ -8,14 +8,17 @@
           router
           >
           <el-menu-item >
-            <h2 style="color: var(--el-text-color-primary);">MatrilxArena</h2>
+            <h2 style="color: var(--el-text-color-primary);">OpenSD</h2>
           </el-menu-item>
           <div class="flex-grow" />
           <el-menu-item index="/index">
-            <el-text class="mx-1" size="large">Index</el-text>
+            <el-text class="mx-1" size="large"></el-text>
           </el-menu-item>
           <el-menu-item index="/text2img">
-            <el-text class="mx-1" size="large">text2img</el-text>
+            <el-text class="mx-1" size="large">文生图</el-text>
+          </el-menu-item>
+          <el-menu-item index="/images">
+            <el-text class="mx-1" size="large">图库</el-text>
           </el-menu-item>
         </el-menu>
     </el-header>
@@ -48,3 +51,5 @@
   align-items: center;
 }
 </style>
+<script setup>
+</script>

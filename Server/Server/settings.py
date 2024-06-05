@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-0b+6uyl*pyqy$n7cl)rsc04ltx@+mi*^nzst!--2$c()&pc0#y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.126.113.178']
 
 
 # Application definition
@@ -171,4 +171,4 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = 'user.CustomUser'
 
-SD_API_URL = 'http://23.94.66.115:8080/'
+SD_API_URL = 'http://10.159.2.108:7860/'

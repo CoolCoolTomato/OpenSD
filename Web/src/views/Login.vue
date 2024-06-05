@@ -3,10 +3,10 @@
     <el-form
       :model="loginFormData"
       label-width="auto"
-      style="width: 500px"
+      style="width: 350px"
     >
       <el-form-item>
-        <h2 style="color: var(--el-text-color-regular);">用户登录</h2>
+        <h2 style="color: var(--el-text-color-regular);width: 100%;text-align: center">用户登录</h2>
       </el-form-item>
       <el-form-item label="用户名">
         <el-input v-model="loginFormData.username"></el-input>
@@ -15,6 +15,7 @@
         <el-input v-model="loginFormData.password" type="password"></el-input>
       </el-form-item>
       <el-form-item>
+        <div style="flex-grow: 1"></div>
         <el-button type="primary" size="large" @click="SubmitLoginForm">登录</el-button>
         <el-button size="large">注册</el-button>
       </el-form-item>
@@ -41,12 +42,15 @@ export default {
         const res = await login(this.loginFormData);
         const { access, refresh } = res;
 
-        localStorage.setItem('access_token', access);
-        localStorage.setItem('refresh_token', refresh);
+        if (access !== "" && refresh !== "") {
+          localStorage.setItem('access_token', access);
+          localStorage.setItem('refresh_token', refresh);
 
-        ElMessage.success('登录成功');
-        this.$router.push('/index')
-
+          ElMessage.success('登录成功');
+          this.$router.push('/index')
+        } else {
+          ElMessage.error('用户名或密码错误');
+        }
       } catch (error) {
         ElMessage.error('用户名或密码错误');
         console.log(error);
@@ -58,11 +62,16 @@ export default {
 
 <style scoped>
 #login-box {
-  width: 100%;
-  height: 100%;
+  width: 450px;
+  height: 300px;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 0 10px #808080;
+  border-radius: 10px;
 }
 </style>

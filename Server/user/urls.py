@@ -1,4 +1,4 @@
-from .views import CustomTokenObtainPairView, UserRegistrationView
+from .views import CustomTokenObtainPairView, UserRegistrationView, CustomTokenRefreshView
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import UserViewSet
@@ -12,4 +12,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('register/', UserRegistrationView.as_view(), name='user-registration'),
     path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/refresh/', CustomTokenRefreshView.as_view(), name='token_obtain_pair'),
 ]
