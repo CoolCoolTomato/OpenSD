@@ -1,3 +1,5 @@
+from rest_framework.decorators import api_view
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.response import Response
@@ -8,6 +10,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .serializers import UserSerializer
+from django.contrib.auth import logout
 
 
 User = get_user_model()
@@ -58,4 +61,25 @@ class CustomTokenRefreshView(TokenRefreshView):
             return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def logout_view(request):
+    try:
+        refresh_token = request.data["refresh_token"]
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+        return Response({"detail": "Successfully logged out."})
+    except Exception as e:
+        return Response({"detail": str(e)}, status=400)
+
+
+@api_view(['GET'])
+def current_user_view(request):
+    user = request.user
+    if user.is_authenticated:
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    else:
+        return Response({"detail": "Not authenticated."}, status=401)
 

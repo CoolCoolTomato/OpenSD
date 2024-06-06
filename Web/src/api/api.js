@@ -30,19 +30,21 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const newAccessToken = await refreshAccessToken();
-        apiClient.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-        return apiClient(originalRequest);
-      } catch (err) {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        return Promise.reject(err);
+      setTimeout(() => {}, 1000)
+      if (localStorage.getItem('refresh_token')){
+         originalRequest._retry = true;
+        try {
+          const newAccessToken = await refreshAccessToken();
+          apiClient.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+          return apiClient(originalRequest);
+        } catch (err) {
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+          return Promise.reject(err);
+        }
       }
-    }
-
+      }
     if (error.response.status === 403) {
       console.error('Access denied');
     } else if (error.response.status === 500) {

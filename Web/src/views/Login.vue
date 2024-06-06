@@ -1,9 +1,19 @@
 <template>
-  <div id="login-box">
+  <div id="login-div">
+    <div id="left">
+      <div>
+        <h2>OpenSD</h2>
+      </div>
+      <div>
+        <h3>基于AIGC技术的图像综合处理系统</h3>
+      </div>
+    </div>
+    <div id="right">
+      <div id="login-box">
     <el-form
       :model="loginFormData"
       label-width="auto"
-      style="width: 350px"
+      style="width: 330px"
     >
       <el-form-item>
         <h2 style="color: var(--el-text-color-regular);width: 100%;text-align: center">用户登录</h2>
@@ -20,6 +30,8 @@
         <el-button size="large">注册</el-button>
       </el-form-item>
     </el-form>
+  </div>
+    </div>
   </div>
 </template>
 
@@ -61,8 +73,46 @@ export default {
 </script>
 
 <style scoped>
+#login-div{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+#left{
+  width: 60%;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  background-color: var(--el-color-primary);
+}
+#left div{
+  width: 100%;
+  left: 50%;
+  top: 35%;
+  transform: translateX(-50%) translateY(-50%);
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+#left h2{
+  color: white;
+  font-size: 50px;
+  width: 65%;
+  margin: 10px;
+}
+#left h3{
+  color: white;
+  font-size: 40px;
+  width: 65%;
+}
+#right{
+  width: 40%;
+  height: 100%;
+  right: 0;
+  position: absolute;
+}
 #login-box {
-  width: 450px;
+  width: 420px;
   height: 300px;
   left: 50%;
   top: 50%;
@@ -73,5 +123,6 @@ export default {
   align-items: center;
   box-shadow: 0 0 10px #808080;
   border-radius: 10px;
+  background-color: white;
 }
 </style>

@@ -25,3 +25,17 @@ export const refreshAccessToken = async () => {
     handleError(error);
   }
 };
+
+
+export const logout = (data) => {
+  return apiClient.post('/api/logout/', data)
+    .then(handleResponse)
+    .catch(handleError);
+};
+
+
+export const getuser = () => {
+  return apiClient.get('/api/getuser/')
+    .then(handleResponse)
+    .catch(handleError);
+};

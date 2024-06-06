@@ -31,6 +31,7 @@ import {get_config, images, text2img} from "@/api/sd.js";
 import {ElMessage} from "element-plus";
 import Config from "@/config/config.js";
 
+
 export default {
   data(){
     return {
@@ -45,7 +46,7 @@ export default {
         ElMessage.error('获取图片失败')
         console.log(error)
       }
-    }
+    },
   },
   mounted() {
     this.GetImgs()
