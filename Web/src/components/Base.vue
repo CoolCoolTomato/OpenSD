@@ -17,6 +17,9 @@
         <el-menu-item index="/text2img">
           <el-text class="mx-1" size="large">文生图</el-text>
         </el-menu-item>
+        <el-menu-item index="/img2img">
+          <el-text class="mx-1" size="large">图生图</el-text>
+        </el-menu-item>
         <el-menu-item index="/images">
           <el-text class="mx-1" size="large">图库</el-text>
         </el-menu-item>
@@ -27,7 +30,7 @@
               <el-dropdown-menu>
                 <el-dropdown-item>当前用户：{{ user.username }}</el-dropdown-item>
                 <el-dropdown-item>剩余点数：{{ user.points }}</el-dropdown-item>
-                <el-dropdown-item command="logout">注销</el-dropdown-item>
+                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>

@@ -41,3 +41,15 @@ export const images = () => {
     .then(handleResponse)
     .catch(handleError);
 };
+
+export const deleteImages = (data) => {
+  return apiClient.post('/api/delete_image/', data)
+    .then(handleResponse)
+    .catch(handleError);
+};
+
+export const img2img = (data) => {
+  return apiClient.post('/api/img2img/', data)
+    .then(handleResponse)
+    .catch(handleError);
+};

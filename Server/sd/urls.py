@@ -1,6 +1,6 @@
 # urls.py
 from django.urls import path
-from .views import text_to_img, get_models, get_config, set_config, get_schedulers, get_samplers, get_user_images
+from .views import text_to_img, get_models, get_config, set_config, get_schedulers, get_samplers, get_user_images, img_to_img, delete_user_image
 
 urlpatterns = [
     path('text2img/', text_to_img, name='text_to_img'),
@@ -10,4 +10,6 @@ urlpatterns = [
     path('get_schedulers/', get_schedulers, name='get_schedulers'),
     path('get_samplers/', get_samplers, name='get_samplers'),
     path('images/', get_user_images, name='get_user_images'),
+    path('delete_image/', delete_user_image, name='delete_user_image'),
+    path('img2img/', img_to_img, name='img_to_img'),
 ]

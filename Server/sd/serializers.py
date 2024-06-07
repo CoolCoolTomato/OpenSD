@@ -5,4 +5,4 @@ from .models import GeneratedImage
 class GeneratedImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = GeneratedImage
-        fields = ['user', 'image', 'created_at']
+        fields = ['id', 'user', 'image', 'created_at']

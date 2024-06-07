@@ -1,6 +1,7 @@
 <script setup>
 import {Picture as IconPicture} from '@element-plus/icons-vue'
 </script>
+
 <template>
   <el-row :gutter="30" style="margin-bottom: 20px">
     <el-col :span="16" style="display:flex;">
@@ -16,22 +17,30 @@ import {Picture as IconPicture} from '@element-plus/icons-vue'
       <el-button size="large" @click="SetConfig" style="margin-left: 15px">确认</el-button>
     </el-col>
     <el-col :span="8">
-      <el-button size="large" type="primary" @click="Text2Img">生成</el-button>
+      <el-button size="large" type="primary" @click="Img2Img">生成</el-button>
     </el-col>
   </el-row>
   <el-row :gutter="30">
     <el-col :span="16">
-      <el-form
-        :model="text2ImgData"
-      >
+      <el-form :model="img2ImgData">
+        <el-form-item label="初始图像" :label-width="formLabelWidth">
+          <el-upload
+            action=""
+            list-type="picture"
+            :auto-upload="false"
+            :file-list="fileList"
+            @change="handleFileChange">
+            <el-button size="large" type="primary">点击上传</el-button>
+          </el-upload>
+        </el-form-item>
         <el-form-item label="提示词" :label-width="formLabelWidth">
-          <el-input v-model="text2ImgData.prompt" type="textarea" placeholder="提示词"></el-input>
+          <el-input v-model="img2ImgData.prompt" type="textarea" placeholder="提示词"></el-input>
         </el-form-item>
         <el-form-item label="负向提示词" :label-width="formLabelWidth">
-          <el-input v-model="text2ImgData.negative_prompt" type="textarea" placeholder="负向提示词"></el-input>
+          <el-input v-model="img2ImgData.negative_prompt" type="textarea" placeholder="负向提示词"></el-input>
         </el-form-item>
         <el-form-item label="采样器" :label-width="formLabelWidth">
-          <el-select v-model="text2ImgData.sampler_name" placeholder="采样器">
+          <el-select v-model="img2ImgData.sampler_name" placeholder="采样器">
             <el-option
               v-for="sampler in samplers"
               :key="sampler"
@@ -41,7 +50,7 @@ import {Picture as IconPicture} from '@element-plus/icons-vue'
           </el-select>
         </el-form-item>
         <el-form-item label="调度类型" :label-width="formLabelWidth">
-          <el-select v-model="text2ImgData.scheduler" placeholder="调度类型">
+          <el-select v-model="img2ImgData.scheduler" placeholder="调度类型">
             <el-option
               v-for="scheduler in schedulers"
               :key="scheduler"
@@ -51,23 +60,23 @@ import {Picture as IconPicture} from '@element-plus/icons-vue'
           </el-select>
         </el-form-item>
         <el-form-item label="采样步数" :label-width="formLabelWidth">
-          <el-slider v-model="text2ImgData.steps" :min="1" :max="150" show-input></el-slider>
+          <el-slider v-model="img2ImgData.steps" :min="1" :max="150" show-input></el-slider>
         </el-form-item>
         <el-form-item label="图片宽度" :label-width="formLabelWidth">
-          <el-slider v-model="text2ImgData.width" :min="64" :max="2048" show-input></el-slider>
+          <el-slider v-model="img2ImgData.width" :min="64" :max="2048" show-input></el-slider>
         </el-form-item>
         <el-form-item label="图片高度" :label-width="formLabelWidth">
-          <el-slider v-model="text2ImgData.height" :min="64" :max="2048" show-input></el-slider>
+          <el-slider v-model="img2ImgData.height" :min="64" :max="2048" show-input></el-slider>
         </el-form-item>
         <el-form-item label="生成次数" :label-width="formLabelWidth">
-          <el-slider v-model="text2ImgData.batch_size" :min="1" :max="10" show-input></el-slider>
+          <el-slider v-model="img2ImgData.batch_size" :min="1" :max="10" show-input></el-slider>
         </el-form-item>
         <el-form-item label="提示词引导系数" :label-width="formLabelWidth">
-          <el-slider v-model="text2ImgData.cfg_scale" :min="1" :max="30" show-input></el-slider>
+          <el-slider v-model="img2ImgData.cfg_scale" :min="1" :max="30" show-input></el-slider>
         </el-form-item>
         <el-form-item label="图像生成种子" :label-width="formLabelWidth">
           <div style="display:flex;width: 100%;">
-            <el-input v-model="text2ImgData.seed" placeholder="图像生成种子" size="large"></el-input>
+            <el-input v-model="img2ImgData.seed" placeholder="图像生成种子" size="large"></el-input>
             <el-button @click="getStableDiffusionSeed" size="large" style="margin-left: 15px">
               <el-icon style="vertical-align: middle">
                 <RefreshRight />
@@ -79,6 +88,9 @@ import {Picture as IconPicture} from '@element-plus/icons-vue'
               </el-icon>
             </el-button>
           </div>
+        </el-form-item>
+        <el-form-item label="重绘强度" :label-width="formLabelWidth">
+          <el-slider v-model="img2ImgData.denoising_strength" :min="0" :max="1" step="0.01" show-input></el-slider>
         </el-form-item>
       </el-form>
     </el-col>
@@ -115,11 +127,12 @@ import {Picture as IconPicture} from '@element-plus/icons-vue'
     </el-col>
   </el-row>
 </template>
+
 <script>
-import {get_models, get_config, set_config, get_schedulers, get_samplers, text2img} from "@/api/sd.js";
+import { get_models, get_config, set_config, get_schedulers, get_samplers, img2img } from "@/api/sd.js";
 import { ElMessage } from "element-plus";
 import Config from "@/config/config.js";
-import {RefreshRight, CircleClose} from "@element-plus/icons-vue";
+import { RefreshRight, CircleClose } from "@element-plus/icons-vue";
 
 export default {
   components: {
@@ -134,7 +147,8 @@ export default {
       models: [],
       samplers: [],
       schedulers: [],
-      text2ImgData: {
+      img2ImgData: {
+        "init_images": [],
         "prompt": "",
         "negative_prompt": "",
         "sampler_name": "DPM++ 2M",
@@ -145,38 +159,36 @@ export default {
         "batch_size": 1,
         "cfg_scale": 7,
         "seed": -1,
+        "denoising_strength": 0.75
       },
       imgs: [],
       isLoadingImg: false,
       isSwitchModel: false,
+      fileList: []
     }
   },
   methods: {
-    async GetModels(){
+    async GetModels() {
       try {
         this.models = await get_models()
-
       } catch (error) {
         ElMessage.error('获取模型失败')
         console.log(error)
       }
     },
-    async GetConfig(){
+    async GetConfig() {
       try {
         this.config = await get_config()
         this.model = this.config.sd_model_checkpoint
-
       } catch (error) {
         ElMessage.error('获取配置失败')
         console.log(error)
       }
     },
-    async SetConfig(){
+    async SetConfig() {
       try {
         this.isSwitchModel = true
-        let res = await set_config({
-          "sd_model_checkpoint": this.model
-        })
+        await set_config({ "sd_model_checkpoint": this.model })
         this.GetConfig()
         this.isSwitchModel = false
         ElMessage({
@@ -188,7 +200,7 @@ export default {
         console.log(error)
       }
     },
-    async GetSchedulers(){
+    async GetSchedulers() {
       try {
         this.schedulers = await get_schedulers()
       } catch (error) {
@@ -196,7 +208,7 @@ export default {
         console.log(error)
       }
     },
-    async GetSamplers(){
+    async GetSamplers() {
       try {
         this.samplers = await get_samplers()
       } catch (error) {
@@ -204,31 +216,44 @@ export default {
         console.log(error)
       }
     },
-    async Text2Img(){
+    async Img2Img() {
       try {
         this.isLoadingImg = true
-        this.imgs = (await text2img(this.text2ImgData)).map(img => `${Config.baseURL}:${img}`)
+        const init_images = this.fileList.map(file => file.url)
+        this.img2ImgData.init_images = init_images
+        const response = await img2img(this.img2ImgData)
+        this.imgs = response.map(img => `${Config.baseURL}:${img}`)
         this.isLoadingImg = false
       } catch (error) {
         this.isLoadingImg = false
-        if (error.response.data.error === "Insufficient points"){
+        if (error.response.data.error === "Insufficient points") {
           ElMessage.error('点数不足')
+        } else if (error.response.data.error === "Initial images are required"){
+          ElMessage.error('未上传图片')
         } else {
           ElMessage.error('图片生成失败')
         }
         console.log(error)
       }
     },
+    handleFileChange(file, fileList) {
+      const reader = new FileReader()
+      reader.readAsDataURL(file.raw)
+      reader.onload = () => {
+        file.url = reader.result
+      }
+      this.fileList = fileList
+    },
     getStableDiffusionSeed() {
-      const timestamp = Date.now();
-      const random = Math.floor(Math.random() * Math.pow(2, 32));
-      const seedStr = timestamp.toString() + random.toString();
-      const seedNum = parseInt(seedStr, 10);
-      const seed = seedNum % Math.pow(2, 32);
-      this.text2ImgData.seed = seed
+      const timestamp = Date.now()
+      const random = Math.floor(Math.random() * Math.pow(2, 32))
+      const seedStr = timestamp.toString() + random.toString()
+      const seedNum = parseInt(seedStr, 10)
+      const seed = seedNum % Math.pow(2, 32)
+      this.img2ImgData.seed = seed
     },
     setSeedDefault() {
-      this.text2ImgData.seed = -1
+      this.img2ImgData.seed = -1
     }
   },
   mounted() {
@@ -239,6 +264,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .block {
   padding: 30px 0;

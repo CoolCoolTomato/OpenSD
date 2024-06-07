@@ -4,6 +4,7 @@ import Base from "@/components/Base.vue";
 import Index from "@/views/Index.vue";
 import Text2Img from "@/views/Text2Img.vue";
 import Images from "@/views/Images.vue";
+import Img2Img from "@/views/Img2Img.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,12 +18,17 @@ const router = createRouter({
         {
           path: 'index',
           name: 'index',
-          component: Index,
+          component: Images,
         },
         {
           path: 'text2img',
           name: 'text2img',
           component: Text2Img,
+        },
+        {
+          path: 'img2img',
+          name: 'img2img',
+          component: Img2Img,
         },
         {
           path: 'images',

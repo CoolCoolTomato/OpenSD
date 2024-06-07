@@ -1,5 +1,5 @@
 const devConfig = {
-    baseURL: 'http://127.0.0.1:8000/'
+    baseURL: 'http://10.161.29.90:8000/'
 }
 
 export default devConfig
