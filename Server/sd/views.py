@@ -17,6 +17,9 @@ from sdapi.get_models import GetModels
 from sdapi.schedulers import Schedulers
 from sdapi.samplers import Samplers
 from sdapi.img2img import Img2Img
+from sdapi.extra_img import ExtraImage
+from sdapi.upscalers import Upscalers
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -115,6 +118,14 @@ def get_samplers(request):
     return JsonResponse(config, safe=False)
 
 
+@api_view(['Get'])
+@permission_classes([IsAuthenticated])
+def get_upscalers(request):
+    upscalers = Upscalers()
+    config = upscalers.get_upscalers()
+    return JsonResponse(config, safe=False)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_user_images(request):
@@ -207,4 +218,63 @@ def img_to_img(request):
     user.points -= 1
     user.save()
 
+    return JsonResponse(img_path_list, safe=False)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def extra_image_view(request):
+    user = request.user
+    if user.points <= 0:
+        return JsonResponse({'error': 'Insufficient points'}, status=400)
+
+    # 获取请求中的图像并检查是否存在
+    image_base64 = request.data.get("image")
+    if not image_base64:
+        return JsonResponse({'error': 'Image is required'}, status=400)
+
+    # 获取高清化的参数
+    params = {
+        "resize_mode": request.data.get("resize_mode", 0),
+        "show_extras_results": request.data.get("show_extras_results", True),
+        "gfpgan_visibility": request.data.get("gfpgan_visibility", 0),
+        "codeformer_visibility": request.data.get("codeformer_visibility", 0),
+        "codeformer_weight": request.data.get("codeformer_weight", 0),
+        "upscaling_resize": request.data.get("upscaling_resize", 2),
+        "upscaling_resize_w": request.data.get("upscaling_resize_w", 512),
+        "upscaling_resize_h": request.data.get("upscaling_resize_h", 512),
+        "upscaling_crop": request.data.get("upscaling_crop", True),
+        "upscaler_1": request.data.get("upscaler_1", "None"),
+        "upscaler_2": request.data.get("upscaler_2", "None"),
+        "extras_upscaler_2_visibility": request.data.get("extras_upscaler_2_visibility", 0),
+        "upscale_first": request.data.get("upscale_first", False),
+    }
+
+    # 创建 ExtraImage 实例
+    extra_image = ExtraImage(**params)
+
+    # 调用高清化修复的函数
+    enhanced_image_base64 = extra_image.enhance_image(image_base64)
+
+    if enhanced_image_base64 is None:
+        return JsonResponse({'error': 'Failed to enhance image'}, status=500)
+
+    # 保存图像到指定文件夹
+    img_data = base64.b64decode(enhanced_image_base64)
+    img = Image.open(BytesIO(img_data))
+    now = datetime.now()
+    time_str = now.strftime("%Y%m%d%H%M%S")
+    image_filename = f"{user.id}_{time_str}.png"
+    image_path = os.path.join(settings.MEDIA_ROOT, 'generated_images', image_filename)
+    img.save(image_path)
+
+    img_path_list = []
+    # 将图像记录保存到数据库
+    generated_image = GeneratedImage.objects.create(user=user, image=f'generated_images/{image_filename}')
+
+    img_path_list.append(settings.MEDIA_URL + 'generated_images/' + image_filename)
+
+    user.points -= 1
+    user.save()
+    # 返回生成的图像路径
     return JsonResponse(img_path_list, safe=False)

@@ -30,6 +30,12 @@ export const get_samplers = () => {
     .catch(handleError);
 };
 
+export const get_upscalers = () => {
+  return apiClient.get('/api/get_upscalers/')
+    .then(handleResponse)
+    .catch(handleError);
+};
+
 export const text2img = (data) => {
   return apiClient.post('/api/text2img/', data)
     .then(handleResponse)
@@ -50,6 +56,12 @@ export const deleteImages = (data) => {
 
 export const img2img = (data) => {
   return apiClient.post('/api/img2img/', data)
+    .then(handleResponse)
+    .catch(handleError);
+};
+
+export const extraImage = (data) => {
+  return apiClient.post('/api/extra_image_view/', data)
     .then(handleResponse)
     .catch(handleError);
 };

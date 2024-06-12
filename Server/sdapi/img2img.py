@@ -1,8 +1,4 @@
 import requests
-import json
-from PIL import Image
-from io import BytesIO
-import base64
 from django.conf import settings
 
 class Img2Img:

@@ -20,6 +20,9 @@
         <el-menu-item index="/img2img">
           <el-text class="mx-1" size="large">图生图</el-text>
         </el-menu-item>
+        <el-menu-item index="/extra">
+          <el-text class="mx-1" size="large">高清化</el-text>
+        </el-menu-item>
         <el-menu-item index="/images">
           <el-text class="mx-1" size="large">图库</el-text>
         </el-menu-item>
